@@ -1,0 +1,27 @@
+syntax = "proto3";
+option go_package = "pkg/pb";
+
+service FedLearn {
+  rpc SendWeights(SendWeightsReq) returns (SendWeightsRes);
+  rpc RequestWeights(RequestWeightsReq) returns (RequestWeightsRes);
+}
+
+message SendWeightsReq {
+  uint32 client_id = 1;
+  uint32 client_data_size = 2;
+  bytes weights_data = 3;
+}
+
+message SendWeightsRes {
+  string status = 1;
+}
+
+message RequestWeightsReq {
+  uint32 client_id = 1;
+  uint32 client_data_size = 2;
+}
+
+message RequestWeightsRes{ 
+  bytes weights_data = 1;
+  uint32 client_id = 2;
+}

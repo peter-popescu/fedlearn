@@ -1,0 +1,31 @@
+syntax = "proto3";
+option go_package = "pkg/modelpb";
+
+service ModelService {
+  rpc InitializeModel(InitializeModelReq) returns (InitializeModelRes);
+  rpc ModelGetWeights(ModelGetWeightsReq) returns (ClientWeights);
+  rpc AggregateModelWeights(stream ClientWeights) returns (AggregateModelWeightsRes);
+}
+
+message ModelGetWeightsReq {
+}
+
+message InitializeModelReq{
+}
+
+message InitializeModelRes {
+    uint32 status = 1;
+}
+
+message ClientWeights {
+    bytes weights = 1;
+    uint32 client_data_size = 2;
+}
+
+message Weights {
+  bytes weights = 1;
+}
+
+message AggregateModelWeightsRes {
+  uint32 status = 1;
+}

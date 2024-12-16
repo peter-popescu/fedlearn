@@ -1,4 +1,19 @@
 import tensorflow as tf
+import tensorflow_datasets as tfds
+
+def init():
+    model = tf.keras.models.Sequential([
+    tf.keras.layers.Flatten(input_shape=(28, 28)),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dense(10)
+    ])
+
+    model.compile(
+        optimizer=tf.keras.optimizers.Adam(0.001),
+        loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+        metrics=[tf.keras.metrics.SparseCategoricalAccuracy()],
+    )
+    return model
 
 def normalize_img(image, label):
   """Normalizes images: `uint8` -> `float32`."""
@@ -27,9 +42,15 @@ def preprocess():
     ds_test = ds_test.prefetch(tf.data.AUTOTUNE)
     return (ds_train, ds_test)
 
-def train_client_model(model, ds_train, ds_test):
+def train_client_model(model, ds_train, ds_test, i):
+    train_size = len(list(ds_train)) // 10
+    test_size = len(list(ds_test)) // 10
+    
+    train_slice = ds_train.skip(i * train_size).take(train_size)
+    test_slice = ds_test.skip(i * test_size).take(test_size)
+    
     model.fit(
-        ds_train,
-        epochs=6,
-        validation_data=ds_test,
+        train_slice,
+        epochs=1,
+        validation_data=test_slice,
     )
