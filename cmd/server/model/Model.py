@@ -44,6 +44,8 @@ def sum_scaled_weights(scaled_weight_list):
     return avg_grad
 
 def aggregate_local_models(client_weights, total_n_examples):
+
+    print("aggregating with", total_n_examples, "samples")
     
     scaled_local_weight_list = list()
     for weights, n_examples in client_weights:

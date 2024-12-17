@@ -80,12 +80,12 @@ func main() {
 	for {
 		select {
 		case <-ticker.C:
-			server.aggModelWeights()
+			server.aggregateModelWeights()
 		}
 	}
 }
 
-func (s *Server) aggModelWeights() {
+func (s *Server) aggregateModelWeights() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -93,13 +93,19 @@ func (s *Server) aggModelWeights() {
 	if err != nil {
 		log.Fatalf("client. failed: %v", err)
 	}
-	for _, weights := range s.ModelState.ClientMap {
-		if len(weights.LocalWeights) <= 0 {
+	for _, client := range s.ModelState.ClientMap {
+		if len(client.LocalWeights) <= 0 {
 			continue
 		}
-		if err := stream.Send(&modelpb.ClientWeights{Weights: weights.LocalWeights, ClientDataSize: weights.AmountOfData}); err != nil {
-			log.Fatalf("client.RecordRoute: stream.Send(%v) failed: %v", weights, err)
+		if !client.Updated { // don't send if not updated
+			continue
 		}
+
+		if err := stream.Send(&modelpb.ClientWeights{Weights: client.LocalWeights, ClientDataSize: client.AmountOfData}); err != nil {
+			log.Fatalf("client.RecordRoute: stream.Send(%v) failed: %v", client, err)
+		}
+
+		client.Updated = false // reset after sending data
 	}
 
 	_, err = stream.CloseAndRecv()
@@ -148,12 +154,12 @@ func runRecordRoute(client pb.RouteGuideClient) {
 */
 
 func (s *Server) SendWeights(ctx context.Context, in *pb.SendWeightsReq) (*pb.SendWeightsRes, error) {
-	log.Printf("Received weights", len(in.WeightsData))
+	log.Println("Received weights", len(in.WeightsData))
 	s.ModelState.ClientMap[in.ClientId].LocalWeights = in.WeightsData
-	s.ModelState.ClientMap[in.ClientId].Aggregated = false
+	s.ModelState.ClientMap[in.ClientId].Updated = true
 	s.ModelState.ClientMap[in.ClientId].AmountOfData = in.ClientDataSize
 
-	// result := <- do something with the weights
+	// TODO: result := <- do something with the weights
 
 	return &pb.SendWeightsRes{Status: "Worked"}, nil
 }

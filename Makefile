@@ -1,8 +1,8 @@
 build:
-	go build -o out cmd/server/server.go
+	go build cmd/server/server.go
 
 run:
-	./out
+	./server
 
 runbuild:
 	go run cmd/server/server.go 1000

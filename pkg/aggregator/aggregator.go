@@ -6,7 +6,7 @@ type ModelInfo struct {
 
 type ClientInfo struct {
 	LocalWeights []byte
-	Aggregated   bool
+	Updated      bool
 	ClientId     uint32
 	AmountOfData uint32
 }
