@@ -22,6 +22,7 @@ const (
 	ModelService_InitializeModel_FullMethodName       = "/ModelService/InitializeModel"
 	ModelService_ModelGetWeights_FullMethodName       = "/ModelService/ModelGetWeights"
 	ModelService_AggregateModelWeights_FullMethodName = "/ModelService/AggregateModelWeights"
+	ModelService_TestModel_FullMethodName             = "/ModelService/TestModel"
 )
 
 // ModelServiceClient is the client API for ModelService service.
@@ -31,6 +32,7 @@ type ModelServiceClient interface {
 	InitializeModel(ctx context.Context, in *InitializeModelReq, opts ...grpc.CallOption) (*InitializeModelRes, error)
 	ModelGetWeights(ctx context.Context, in *ModelGetWeightsReq, opts ...grpc.CallOption) (*ClientWeights, error)
 	AggregateModelWeights(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[ClientWeights, AggregateModelWeightsRes], error)
+	TestModel(ctx context.Context, in *TestModelReq, opts ...grpc.CallOption) (*TestModelRes, error)
 }
 
 type modelServiceClient struct {
@@ -74,6 +76,16 @@ func (c *modelServiceClient) AggregateModelWeights(ctx context.Context, opts ...
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type ModelService_AggregateModelWeightsClient = grpc.ClientStreamingClient[ClientWeights, AggregateModelWeightsRes]
 
+func (c *modelServiceClient) TestModel(ctx context.Context, in *TestModelReq, opts ...grpc.CallOption) (*TestModelRes, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TestModelRes)
+	err := c.cc.Invoke(ctx, ModelService_TestModel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ModelServiceServer is the server API for ModelService service.
 // All implementations must embed UnimplementedModelServiceServer
 // for forward compatibility.
@@ -81,6 +93,7 @@ type ModelServiceServer interface {
 	InitializeModel(context.Context, *InitializeModelReq) (*InitializeModelRes, error)
 	ModelGetWeights(context.Context, *ModelGetWeightsReq) (*ClientWeights, error)
 	AggregateModelWeights(grpc.ClientStreamingServer[ClientWeights, AggregateModelWeightsRes]) error
+	TestModel(context.Context, *TestModelReq) (*TestModelRes, error)
 	mustEmbedUnimplementedModelServiceServer()
 }
 
@@ -99,6 +112,9 @@ func (UnimplementedModelServiceServer) ModelGetWeights(context.Context, *ModelGe
 }
 func (UnimplementedModelServiceServer) AggregateModelWeights(grpc.ClientStreamingServer[ClientWeights, AggregateModelWeightsRes]) error {
 	return status.Errorf(codes.Unimplemented, "method AggregateModelWeights not implemented")
+}
+func (UnimplementedModelServiceServer) TestModel(context.Context, *TestModelReq) (*TestModelRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TestModel not implemented")
 }
 func (UnimplementedModelServiceServer) mustEmbedUnimplementedModelServiceServer() {}
 func (UnimplementedModelServiceServer) testEmbeddedByValue()                      {}
@@ -164,6 +180,24 @@ func _ModelService_AggregateModelWeights_Handler(srv interface{}, stream grpc.Se
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type ModelService_AggregateModelWeightsServer = grpc.ClientStreamingServer[ClientWeights, AggregateModelWeightsRes]
 
+func _ModelService_TestModel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TestModelReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ModelServiceServer).TestModel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ModelService_TestModel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ModelServiceServer).TestModel(ctx, req.(*TestModelReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ModelService_ServiceDesc is the grpc.ServiceDesc for ModelService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -178,6 +212,10 @@ var ModelService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ModelGetWeights",
 			Handler:    _ModelService_ModelGetWeights_Handler,
+		},
+		{
+			MethodName: "TestModel",
+			Handler:    _ModelService_TestModel_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

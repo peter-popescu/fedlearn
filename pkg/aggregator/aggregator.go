@@ -1,6 +1,9 @@
 package aggregator
 
+import "sync"
+
 type ModelInfo struct {
+	Mu        *sync.Mutex
 	ClientMap map[uint32]*ClientInfo
 }
 

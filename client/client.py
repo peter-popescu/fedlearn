@@ -50,7 +50,7 @@ def main(input_args):
             if response.status != "Worked":
                 print("error sending weights:", response.Status)
             else:
-                response = stub.RequestWeights(pb2_fedlearn.RequestWeightsReq(client_id=0, client_data_size=len(train)))
+                response = stub.RequestWeights(pb2_fedlearn.RequestWeightsReq(client_id=client_id, client_data_size=len(train)))
                 weights = deserialize(response.weights_data)
                 model.set_weights(weights)
 

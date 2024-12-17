@@ -5,6 +5,7 @@ service ModelService {
   rpc InitializeModel(InitializeModelReq) returns (InitializeModelRes);
   rpc ModelGetWeights(ModelGetWeightsReq) returns (ClientWeights);
   rpc AggregateModelWeights(stream ClientWeights) returns (AggregateModelWeightsRes);
+  rpc TestModel(TestModelReq) returns (TestModelRes);
 }
 
 message ModelGetWeightsReq {
@@ -28,4 +29,13 @@ message Weights {
 
 message AggregateModelWeightsRes {
   uint32 status = 1;
+}
+
+message TestModelReq {
+
+}
+
+message TestModelRes {
+  float loss = 1;
+  float acc = 2;
 }

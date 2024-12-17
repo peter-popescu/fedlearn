@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11proto/model.proto\"\x14\n\x12ModelGetWeightsReq\"\x14\n\x12InitializeModelReq\"$\n\x12InitializeModelRes\x12\x0e\n\x06status\x18\x01 \x01(\r\":\n\rClientWeights\x12\x0f\n\x07weights\x18\x01 \x01(\x0c\x12\x18\n\x10\x63lient_data_size\x18\x02 \x01(\r\"\x1a\n\x07Weights\x12\x0f\n\x07weights\x18\x01 \x01(\x0c\"*\n\x18\x41ggregateModelWeightsRes\x12\x0e\n\x06status\x18\x01 \x01(\r2\xc9\x01\n\x0cModelService\x12;\n\x0fInitializeModel\x12\x13.InitializeModelReq\x1a\x13.InitializeModelRes\x12\x36\n\x0fModelGetWeights\x12\x13.ModelGetWeightsReq\x1a\x0e.ClientWeights\x12\x44\n\x15\x41ggregateModelWeights\x12\x0e.ClientWeights\x1a\x19.AggregateModelWeightsRes(\x01\x42\rZ\x0bpkg/modelpbb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11proto/model.proto\"\x14\n\x12ModelGetWeightsReq\"\x14\n\x12InitializeModelReq\"$\n\x12InitializeModelRes\x12\x0e\n\x06status\x18\x01 \x01(\r\":\n\rClientWeights\x12\x0f\n\x07weights\x18\x01 \x01(\x0c\x12\x18\n\x10\x63lient_data_size\x18\x02 \x01(\r\"\x1a\n\x07Weights\x12\x0f\n\x07weights\x18\x01 \x01(\x0c\"*\n\x18\x41ggregateModelWeightsRes\x12\x0e\n\x06status\x18\x01 \x01(\r\"\x0e\n\x0cTestModelReq\")\n\x0cTestModelRes\x12\x0c\n\x04loss\x18\x01 \x01(\x02\x12\x0b\n\x03\x61\x63\x63\x18\x02 \x01(\x02\x32\xf4\x01\n\x0cModelService\x12;\n\x0fInitializeModel\x12\x13.InitializeModelReq\x1a\x13.InitializeModelRes\x12\x36\n\x0fModelGetWeights\x12\x13.ModelGetWeightsReq\x1a\x0e.ClientWeights\x12\x44\n\x15\x41ggregateModelWeights\x12\x0e.ClientWeights\x1a\x19.AggregateModelWeightsRes(\x01\x12)\n\tTestModel\x12\r.TestModelReq\x1a\r.TestModelResB\rZ\x0bpkg/modelpbb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -44,6 +44,10 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_WEIGHTS']._serialized_end=189
   _globals['_AGGREGATEMODELWEIGHTSRES']._serialized_start=191
   _globals['_AGGREGATEMODELWEIGHTSRES']._serialized_end=233
-  _globals['_MODELSERVICE']._serialized_start=236
-  _globals['_MODELSERVICE']._serialized_end=437
+  _globals['_TESTMODELREQ']._serialized_start=235
+  _globals['_TESTMODELREQ']._serialized_end=249
+  _globals['_TESTMODELRES']._serialized_start=251
+  _globals['_TESTMODELRES']._serialized_end=292
+  _globals['_MODELSERVICE']._serialized_start=295
+  _globals['_MODELSERVICE']._serialized_end=539
 # @@protoc_insertion_point(module_scope)

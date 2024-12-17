@@ -49,6 +49,11 @@ class ModelServiceStub(object):
                 request_serializer=proto_dot_model__pb2.ClientWeights.SerializeToString,
                 response_deserializer=proto_dot_model__pb2.AggregateModelWeightsRes.FromString,
                 _registered_method=True)
+        self.TestModel = channel.unary_unary(
+                '/ModelService/TestModel',
+                request_serializer=proto_dot_model__pb2.TestModelReq.SerializeToString,
+                response_deserializer=proto_dot_model__pb2.TestModelRes.FromString,
+                _registered_method=True)
 
 
 class ModelServiceServicer(object):
@@ -72,6 +77,12 @@ class ModelServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def TestModel(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ModelServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -89,6 +100,11 @@ def add_ModelServiceServicer_to_server(servicer, server):
                     servicer.AggregateModelWeights,
                     request_deserializer=proto_dot_model__pb2.ClientWeights.FromString,
                     response_serializer=proto_dot_model__pb2.AggregateModelWeightsRes.SerializeToString,
+            ),
+            'TestModel': grpc.unary_unary_rpc_method_handler(
+                    servicer.TestModel,
+                    request_deserializer=proto_dot_model__pb2.TestModelReq.FromString,
+                    response_serializer=proto_dot_model__pb2.TestModelRes.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -172,6 +188,33 @@ class ModelService(object):
             '/ModelService/AggregateModelWeights',
             proto_dot_model__pb2.ClientWeights.SerializeToString,
             proto_dot_model__pb2.AggregateModelWeightsRes.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def TestModel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/ModelService/TestModel',
+            proto_dot_model__pb2.TestModelReq.SerializeToString,
+            proto_dot_model__pb2.TestModelRes.FromString,
             options,
             channel_credentials,
             insecure,

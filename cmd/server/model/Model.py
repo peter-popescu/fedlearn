@@ -3,6 +3,8 @@ import tensorflow_datasets as tfds
 from keras import backend as K 
 import sys
 import argparse
+import tensorflow as tf
+import tensorflow_datasets as tfds
 
 
 def init():
@@ -43,6 +45,43 @@ def sum_scaled_weights(scaled_weight_list):
         
     return avg_grad
 
+def preprocess():
+    (ds_train, ds_test), ds_info = tfds.load(
+    'mnist',
+    split=['train', 'test'],
+    shuffle_files=True,
+    as_supervised=True,
+    with_info=True,
+    )
+
+    ds_train = ds_train.map(
+        normalize_img, num_parallel_calls=tf.data.AUTOTUNE)
+    ds_train = ds_train.cache()
+    ds_train = ds_train.shuffle(ds_info.splits['train'].num_examples)
+    ds_train = ds_train.batch(128)
+    ds_train = ds_train.prefetch(tf.data.AUTOTUNE)
+
+    ds_test = ds_test.map(
+        normalize_img, num_parallel_calls=tf.data.AUTOTUNE)
+    ds_test = ds_test.batch(128)
+    ds_test = ds_test.cache()
+    ds_test = ds_test.prefetch(tf.data.AUTOTUNE)
+    return (ds_train, ds_test)
+
+def normalize_img(image, label):
+    """Normalizes images: `uint8` -> `float32`."""
+    return tf.cast(image, tf.float32) / 255., label
+
+def test_model(model, ds_test, i):
+    test_size = len(list(ds_test)) // 10
+    
+    test_slice = ds_test.skip(i * test_size).take(test_size)
+
+    loss, accuracy = model.evaluate(test_slice, verbose=0)
+    
+    print(f'Loss: {loss}. Acc: {accuracy}')
+
+
 def aggregate_local_models(client_weights, total_n_examples):
 
     print("aggregating with", total_n_examples, "samples")
@@ -70,6 +109,7 @@ def get_weights():
     model = tf.keras.models.load_model('global_model.keras')
     print(len(model.get_weights()))
     return model.get_weights()
+
 
 # def main(args):
 #     print("call")
