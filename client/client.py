@@ -32,9 +32,7 @@ def main(input_args):
         train, test = cm.preprocess()
 
         response = stub.RequestWeights(pb2_fedlearn.RequestWeightsReq(client_id=0, client_data_size=len(train)))
-        # print("Received  {}".format(pb2_fedlearn.GuessStatus.Name(response.result)))
 
-        # print(response.weights_data)
         model = cm.init() 
         weights = deserialize(response.weights_data)
         model.set_weights(weights)

@@ -19,7 +19,6 @@ import (
 )
 
 type Server struct {
-	// some kind of state struct?
 	ModelState aggregator.ModelInfo
 
 	pb.UnimplementedFedLearnServer
@@ -149,7 +148,6 @@ func (s *Server) SendWeights(ctx context.Context, in *pb.SendWeightsReq) (*pb.Se
 	s.ModelState.ClientMap[in.ClientId].Updated = true
 	s.ModelState.ClientMap[in.ClientId].AmountOfData = in.ClientDataSize
 	s.ModelState.Mu.Unlock()
-	// TODO: result := <- do something with the weights
 
 	return &pb.SendWeightsRes{Status: "Worked"}, nil
 }
